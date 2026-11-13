@@ -1,15 +1,13 @@
 /**
  * Author: Simon Lindholm
  * License: CC0
- * Description: Add and remove intervals from a set of disjoint intervals.
- * Will merge the added interval with any overlapping intervals in the set when adding.
- * Intervals are [inclusive, exclusive).
+ * Description: Set of disjoint intervals [L, R): add merges overlapping ones, remove cuts them.
  * Time: O(\log N)
  * Status: stress-tested
  */
 #pragma once
 
-set<pii>::iterator addInterval(set<pii>& is, int L, int R) {
+set<pair<int, int>>::iterator addInterval(set<pair<int, int>>& is, int L, int R) {
 	if (L == R) return is.end();
 	auto it = is.lower_bound({L, R}), before = it;
 	while (it != is.end() && it->first <= R) {
@@ -21,10 +19,10 @@ set<pii>::iterator addInterval(set<pii>& is, int L, int R) {
 		R = max(R, it->second);
 		is.erase(it);
 	}
-	return is.insert(before, {L,R});
+	return is.insert(before, {L, R});
 }
 
-void removeInterval(set<pii>& is, int L, int R) {
+void removeInterval(set<pair<int, int>>& is, int L, int R) {
 	if (L == R) return;
 	auto it = addInterval(is, L, R);
 	auto r2 = it->second;

@@ -1,16 +1,15 @@
 /**
  * Author: Simon Lindholm
  * Date: 2016-07-25
+ * License: CC0
  * Source: https://github.com/ngthanhtrung23/ACM_Notebook_new/blob/master/DataStructure/LinkCutTree.h
- * Description: Represents a forest of unrooted trees. You can add and remove
- * edges (as long as the result is still a forest), and check whether
- * two nodes are in the same tree.
+ * Description: Forest of unrooted trees: link(u, v), cut(u, v), connected(u, v). Result must stay a forest.
  * Time: All operations take amortized O(\log N).
  * Status: Stress-tested a bit for N <= 20
  */
 #pragma once
 
-struct Node { // Splay tree. Root's pp contains tree's parent.
+struct Node { // splay tree, root's pp = parent of the path
 	Node *p = 0, *pp = 0, *c[2];
 	bool flip = 0;
 	Node() { c[0] = c[1] = 0; fix(); }
@@ -81,7 +80,7 @@ struct LinkCut {
 	void makeRoot(Node* u) { /// Move u to root of represented tree.
 		access(u);
 		u->splay();
-		if(u->c[0]) {
+		if (u->c[0]) {
 			u->c[0]->p = 0;
 			u->c[0]->flip ^= 1;
 			u->c[0]->pp = u;

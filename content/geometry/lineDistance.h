@@ -5,11 +5,8 @@
  * Source: Basic math
  * Description:\\
 \begin{minipage}{75mm}
-Returns the signed distance between point p and the line containing points a and b.
-Positive value on left side and negative on right as seen from a towards b. a==b gives nan.
-P is supposed to be Point<T> or Point3D<T> where T is e.g. double or long long.
-It uses products in intermediate steps so watch out for overflow if using int or long long.
-Using Point3D will always give a non-negative distance. For Point3D, call .dist on the result of the cross product.
+Signed distance from p to the line ab: positive on the left of $a \to b$. a == b gives nan.
+For Point3D call .dist on the cross product.
 \end{minipage}
 \begin{minipage}{15mm}
 \includegraphics[width=\textwidth]{content/geometry/lineDistance}
@@ -22,5 +19,5 @@ Using Point3D will always give a non-negative distance. For Point3D, call .dist 
 
 template<class P>
 double lineDist(P a, P b, P p) {
-	return (double)(b-a).cross(p-a)/(b-a).dist();
+	return (double)(b - a).cross(p - a) / (b - a).dist();
 }

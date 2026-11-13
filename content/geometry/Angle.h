@@ -3,22 +3,17 @@
  * Date: 2015-01-31
  * License: CC0
  * Source: me
- * Description: A class for ordering angles (as represented by int points and
- *  a number of rotations around the origin). Useful for rotational sweeping.
- *  Sometimes also represents points or vectors.
- * Usage:
- *  vector<Angle> v = {w[0], w[0].t360() ...}; // sorted
- *  int j = 0; rep(i,0,n) { while (v[j] < v[i].t180()) ++j; }
- *  // sweeps j such that (j-i) represents the number of positively oriented triangles with vertices at 0 and i
+ * Description: Angles as int points + number of full turns t, for rotational sweeps.
  * Status: Used, works well
  */
 #pragma once
 
+// sweep: v = {w[0], ..., w[0].t360(), ...} sorted; while (v[j] < v[i].t180()) ++j;
 struct Angle {
 	int x, y;
 	int t;
-	Angle(int x, int y, int t=0) : x(x), y(y), t(t) {}
-	Angle operator-(Angle b) const { return {x-b.x, y-b.y, t}; }
+	Angle(int x, int y, int t = 0) : x(x), y(y), t(t) {}
+	Angle operator-(Angle b) const { return {x - b.x, y - b.y, t}; }
 	int half() const {
 		assert(x || y);
 		return y < 0 || (y == 0 && x < 0);
@@ -33,8 +28,7 @@ bool operator<(Angle a, Angle b) {
 	       make_tuple(b.t, b.half(), a.x * (ll)b.y);
 }
 
-// Given two points, this calculates the smallest angle between
-// them, i.e., the angle that covers the defined line segment.
+// smallest angle between two points (covers the segment)
 pair<Angle, Angle> segmentAngles(Angle a, Angle b) {
 	if (b < a) swap(a, b);
 	return (b < a.t180() ?
@@ -47,5 +41,5 @@ Angle operator+(Angle a, Angle b) { // point a + vector b
 }
 Angle angleDiff(Angle a, Angle b) { // angle b - angle a
 	int tu = b.t - a.t; a.t = b.t;
-	return {a.x*b.x + a.y*b.y, a.x*b.y - a.y*b.x, tu - (b < a)};
+	return {a.x * b.x + a.y * b.y, a.x * b.y - a.y * b.x, tu - (b < a)};
 }

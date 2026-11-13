@@ -1,17 +1,16 @@
 /**
  * Author: 
- * Description: 
+ * Description: In place: dp[mask] := sum of dp[sub] over all submasks. Supersets: if (!(mask >> i \& 1)),
+ * dp[mask] += dp[mask | 1 << i]. Inverse: -= instead of +=.
+ * Time: O(K 2^K)
  */
+#pragma once
 
-const int N = 20;
-ll dp[1<<N], iVal[1<<N];
+const int K = 20;
+ll dp[1 << K];
 
-void sosDP(){ // O(N * 2^N) 
-    for(int i=0; i<(1<<N); i++) 
-        dp[i] = iVal[i];
-
-	for(int i=0; i<N; i++)
-		for(int mask=0; mask<(1<<N); mask++)
-			if(mask&(1<<i))
-				dp[mask] += dp[mask^(1<<i)];
+void sos() {
+	for (int i = 0; i < K; ++i)
+		for (int mask = 0; mask < (1 << K); ++mask)
+			if (mask >> i & 1) dp[mask] += dp[mask ^ (1 << i)];
 }

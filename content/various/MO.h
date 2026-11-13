@@ -1,63 +1,49 @@
 /**
  * Author: 
- * Description: 
+ * Description: Offline [l, r] queries: sort, then ans[q.it] = mo.get(q.l, q.r). C $\approx n / \sqrt q$.
+ * hilbert(l, r) as the sort key is often faster (coordinates $< 2^{20}$).
+ * Time: O((n + q) \sqrt n)
  */
+#pragma once
 
-#include <bits/stdc++.h>
-#define ll long long
-const int MAXN = 1e5 + 5; 			/*LATEX_IGNORED_LINE*/
-using namespace std;
-
-const int BLOCK_SZ = 700;
-
-struct Query{
-	int l, r, idx;
-	Query(int l, int r, int idx) : l(l), r(r), idx(idx) {}
-	bool operator < (Query q) const {
-		if(l / BLOCK_SZ != q.l / BLOCK_SZ) return l < q.l;
-		return (l / BLOCK_SZ &1) ? ( r < q.r ) : (r > q.r );
+const int C = 700;
+struct query {
+	int l, r, it;
+	bool operator<(const query& a) const {
+		if (l / C != a.l / C) return l < a.l;
+		return (l / C & 1) ? r < a.r : r > a.r;
 	}
 };
+struct {
+	int l = 0, r = -1;
 
-void add(int idx);
-void remove(int idx);
-int getAnswer();
+	void add(int pos) {} // a[pos] enters
+	void del(int pos) {} // a[pos] leaves
 
-vector<int> MO(vector<Query> &queries){
-	vector<int> ans(queries.size());
-
-	sort(queries.begin(), queries.end()); // to use hilbert curves, call sortQueries instead
-
-	int L = 0, R = 0;
-	add(0);
-
-	for(auto [l, r, idx] : queries){
-		while(l < L) add(--L);
-		while(r > R) add(++R);
-		while(l > L) remove(L++);
-		while(r < R) remove(R--);
-		
-		ans[idx] = getAnswer();
+	int get() { return 0; } // current answer
+	int get(int pl, int pr) {
+		while (r < pr)
+			add(++r);
+		while (l < pl)
+			del(l++);
+		while (l > pl)
+			add(--l);
+		while (r > pr)
+			del(r--);
+		return get();
 	}
+} mo;
 
-	return ans;
-}
-
-//OPTIONAL
-void sortQueries(vector<Query> &qr){ 
-	vector<ll> h(qr.size());
-	for(int i=0; i<qr.size(); i++) h[i] = hilbert(qr[i].l, qr[i].r);
-	sort(qr.begin(), qr.end(), [&](Query&a, Query&b) { return h[a.idx] < h[b.idx]; });
-}
-
-inline ll hilbert(int x, int y){ //OPTIONAL
-	static int N = 1 << (__builtin_clz(0) - __builtin_clz(MAXN));
-	int rx, ry, s; ll d = 0;
-	for(s = N/2; s > 0; s /= 2){
-		rx = (x & s) > 0, ry = (y & s) > 0;
-		d += s * (ll)(s) * ((3 * rx) ^ ry);
-		if(ry == 0) { if(rx == 1) x = N-1 - x, y = N-1 - y; swap(x, y); } 
+ll hilbert(int x, int y) { // OPTIONAL
+	const int H = 1 << 20;
+	ll d = 0;
+	for (int s = H / 2; s > 0; s /= 2) {
+		int rx = (x & s) > 0, ry = (y & s) > 0;
+		d += (ll)s * s * ((3 * rx) ^ ry);
+		if (ry == 0) {
+			if (rx == 1) x = H - 1 - x, y = H - 1 - y;
+			swap(x, y);
+		}
 	}
 	return d;
 }
-

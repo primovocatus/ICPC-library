@@ -3,8 +3,7 @@
  * Date: 2016-07-23
  * License: CC0
  * Source: me
- * Description: BumpAllocator for STL containers.
- * Usage: vector<vector<int, small<int>>> ed(N);
+ * Description: BumpAllocator for STL containers: vector<vector<int, small<int>>> ed(N).
  * Status: tested
  */
 #pragma once

@@ -3,24 +3,15 @@
  * Date: 2017-04-17
  * License: CC0
  * Source: folklore
- * Description: Finds all biconnected components in an undirected graph, and
- *  runs a callback for the edges in each. In a biconnected component there
- *  are at least two internally disjoint paths between any two nodes (a cycle
- *  exists through them). Note that a node can be in several components. An
- *  edge which is not in a component is a bridge, i.e., not part of any cycle.
- * Usage:
- *  int eid = 0; ed.resize(N);
- *  for each edge (a,b) {
- *    ed[a].emplace_back(b, eid);
- *    ed[b].emplace_back(a, eid++); }
- *  bicomps([\&](const vi\& edgelist) {...});
+ * Description: ed[a] = \{(b, eid)\}, same eid in both directions. bicomps(f): f(edge ids) for each
+ * biconnected component. A vertex can be in several components; an edge in none is a bridge.
  * Time: O(E + V)
  * Status: tested during MIPT ICPC Workshop 2017
  */
 #pragma once
 
-vi num, st;
-vector<vector<pii>> ed;
+vector<int> num, st;
+vector<vector<pair<int, int>>> ed;
 int Time;
 template<class F>
 int dfs(int at, int par, F& f) {
@@ -31,12 +22,12 @@ int dfs(int at, int par, F& f) {
 			if (num[y] < me)
 				st.push_back(e);
 		} else {
-			int si = sz(st);
+			int si = (int)st.size();
 			int up = dfs(y, e, f);
 			top = min(top, up);
 			if (up == me) {
 				st.push_back(e);
-				f(vi(st.begin() + si, st.end()));
+				f(vector<int>(st.begin() + si, st.end()));
 				st.resize(si);
 			}
 			else if (up < me) st.push_back(e);
@@ -48,6 +39,6 @@ int dfs(int at, int par, F& f) {
 
 template<class F>
 void bicomps(F f) {
-	num.assign(sz(ed), 0);
-	rep(i,0,sz(ed)) if (!num[i]) dfs(i, -1, f);
+	num.assign((int)ed.size(), 0);
+	for (int i = 0; i < (int)ed.size(); ++i) if (!num[i]) dfs(i, -1, f);
 }

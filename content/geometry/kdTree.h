@@ -1,8 +1,9 @@
 /**
  * Author: Stanford
  * Date: Unknown
+ * License: CC0
  * Source: Stanford Notebook
- * Description: KD-tree (2d, can be extended to 3d)
+ * Description: 2D KD-tree, nearest(p) = \{squared distance, point\}.
  * Status: Tested on excellentengineers
  */
 #pragma once
@@ -24,7 +25,7 @@ struct Node {
 	T distance(P p) { // min squared distance to a point
 		T x = (p.x < x0 ? x0 : p.x > x1 ? x1 : p.x);
 		T y = (p.y < y0 ? y0 : p.y > y1 ? y1 : p.y);
-		return (P(x,y) - p).dist2();
+		return (P(x, y) - p).dist2();
 	}
 
 	Node(vector<P>&& vp) : pt(vp[0]) {
@@ -34,10 +35,10 @@ struct Node {
 		}
 		if (vp.size() > 1) {
 			// split on x if width >= height (not ideal...)
-			sort(all(vp), x1 - x0 >= y1 - y0 ? on_x : on_y);
+			sort(vp.begin(), vp.end(), x1 - x0 >= y1 - y0 ? on_x : on_y);
 			// divide by taking half the array for each child (not
 			// best performance with many duplicates in the middle)
-			int half = sz(vp)/2;
+			int half = (int)vp.size() / 2;
 			first = new Node({vp.begin(), vp.begin() + half});
 			second = new Node({vp.begin() + half, vp.end()});
 		}
@@ -46,7 +47,7 @@ struct Node {
 
 struct KDTree {
 	Node* root;
-	KDTree(const vector<P>& vp) : root(new Node({all(vp)})) {}
+	KDTree(const vector<P>& vp) : root(new Node({vp.begin(), vp.end()})) {}
 
 	pair<T, P> search(Node *node, P p) {
 		if (!node->first) {
@@ -66,8 +67,7 @@ struct KDTree {
 		return best;
 	}
 
-	// find nearest point to a point, and its squared distance
-	// (requires an arbitrary operator< for Point)
+	// nearest point and its squared distance (needs operator< for Point)
 	pair<T, P> nearest(P p) {
 		return search(root, p);
 	}

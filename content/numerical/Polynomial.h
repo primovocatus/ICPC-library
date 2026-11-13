@@ -1,7 +1,8 @@
 /**
  * Author: David Rydh, Per Austrin
  * Date: 2003-03-16
- * Description:
+ * License: CC0
+ * Description: a[i] = coefficient of $x^i$. p(x), diff(), divroot(x0) divides by $(x - x_0)$.
  */
 #pragma once
 
@@ -9,16 +10,16 @@ struct Poly {
 	vector<double> a;
 	double operator()(double x) const {
 		double val = 0;
-		for (int i = sz(a); i--;) (val *= x) += a[i];
+		for (int i = (int)a.size(); i--;) (val *= x) += a[i];
 		return val;
 	}
 	void diff() {
-		rep(i,1,sz(a)) a[i-1] = i*a[i];
+		for (int i = 1; i < (int)a.size(); ++i) a[i - 1] = i * a[i];
 		a.pop_back();
 	}
 	void divroot(double x0) {
 		double b = a.back(), c; a.back() = 0;
-		for(int i=sz(a)-1; i--;) c = a[i], a[i] = a[i+1]*x0+b, b=c;
+		for (int i = (int)a.size() - 1; i--;) c = a[i], a[i] = a[i + 1] * x0 + b, b = c;
 		a.pop_back();
 	}
 };

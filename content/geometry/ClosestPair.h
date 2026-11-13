@@ -3,7 +3,7 @@
  * Date: 2019-04-17
  * License: CC0
  * Source: https://codeforces.com/blog/entry/58747
- * Description: Finds the closest pair of points.
+ * Description: Closest pair of points, $n > 1$.
  * Time: O(n \log n)
  * Status: stress-tested
  */
@@ -13,9 +13,9 @@
 
 typedef Point<ll> P;
 pair<P, P> closest(vector<P> v) {
-	assert(sz(v) > 1);
+	assert((int)v.size() > 1);
 	set<P> S;
-	sort(all(v), [](P a, P b) { return a.y < b.y; });
+	sort(v.begin(), v.end(), [](P a, P b) { return a.y < b.y; });
 	pair<ll, pair<P, P>> ret{LLONG_MAX, {P(), P()}};
 	int j = 0;
 	for (P p : v) {

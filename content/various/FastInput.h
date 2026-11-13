@@ -2,10 +2,7 @@
  * Author: chilli
  * License: CC0
  * Source: Own work
- * Description: Read an integer from stdin. Usage requires your program to pipe in
- * input from file.
- * Usage: ./a.out < input.txt
- * Time: About 5x as fast as cin/scanf.
+ * Description: About 5x faster than cin/scanf. Input must come from a file: ./a.out < in.txt
  * Status: tested on SPOJ INTEST, unit tested
  */
 #pragma once

@@ -5,7 +5,7 @@
  * Source: http://en.wikipedia.org/wiki/Circumcircle
  * Description:\\
 \begin{minipage}{75mm}
-The circumcirle of a triangle is the circle intersecting all three vertices. ccRadius returns the radius of the circle going through points A, B and C and ccCenter returns the center of the same circle.
+Circle through A, B, C: radius ccRadius, center ccCenter.
 \end{minipage}
 \begin{minipage}{15mm}
 \vspace{-2mm}
@@ -19,10 +19,10 @@ The circumcirle of a triangle is the circle intersecting all three vertices. ccR
 
 typedef Point<double> P;
 double ccRadius(P A, P B, P C) {
-	return (B-A).dist()*(C-B).dist()*(A-C).dist()/
-			abs((B-A).cross(C-A))/2;
+	return (B - A).dist() * (C - B).dist() * (A - C).dist() /
+			abs((B - A).cross(C - A)) / 2;
 }
 P ccCenter(P A, P B, P C) {
-	P b = C-A, c = B-A;
-	return A + (b*c.dist2()-c*b.dist2()).perp()/b.cross(c)/2;
+	P b = C - A, c = B - A;
+	return A + (b * c.dist2() - c * b.dist2()).perp() / b.cross(c) / 2;
 }

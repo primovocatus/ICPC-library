@@ -1,7 +1,8 @@
 /**
  * Author: Mattias de Zalenski
  * Date: 2002-11-04
- * Description: Magic formula for the volume of a polyhedron. Faces should point outwards.
+ * License: CC0
+ * Description: Faces (fields a, b, c) must point outwards.
  * Status: tested
  */
 #pragma once
